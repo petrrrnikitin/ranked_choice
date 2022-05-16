@@ -15,9 +15,9 @@ services:
     ports:
       - "5432:5432"
   php:
+    container_name: php
     build:
       context: .
-      target: app_php
     image: sf-docker/php:dev
     restart: on-failure
     environment:
@@ -29,8 +29,8 @@ services:
     depends_on:
       - database
     volumes:
-      - .:/app:rw,cached
-      - var:/app/var
+      - .:/var/www/symfony_docker:rw,cached
+      - ./var:/var/www/symfony_docker/var
   nginx:
     container_name: nginx
     image: nginx:stable-alpine
@@ -42,6 +42,3 @@ services:
     depends_on:
       - php
       - database
-volumes:
-  db-data:
-  var:
