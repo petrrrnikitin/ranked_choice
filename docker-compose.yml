@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  database:
+    container_name: database
+    image: postgres:12-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./postgres:/var/lib/postgresql/data:rw
+    ports:
+      - "5432:5432"
+  php:
+    build:
+      context: .
+      target: app_php
+    image: sf-docker/php:dev
+    restart: on-failure
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+      PHP_DATE_TIMEZONE: ${PHP_DATE_TIMEZONE:-UTC}
+      XDEBUG_CONFIG: remote_host=192.168.3.5
+      PHP_IDE_CONFIG: serverName=localhost
+    depends_on:
+      - database
+    volumes:
+      - .:/app:rw,cached
+      - var:/app/var
+  nginx:
+    container_name: nginx
+    image: nginx:stable-alpine
+    ports:
+      - '8080:80'
+    volumes:
+      - .:/var/www/symfony_docker
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - database
+volumes:
+  db-data:
+  var:
