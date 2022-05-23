@@ -9,6 +9,12 @@ rebuild:
 	docker-compose rm -vsf
 	docker-compose up -d --build
 
+entity:
+	symfony console make:entity
+
+migration:
+	symfony console make:migration
+
 db:
 	docker-compose exec php ./bin/console doctrine:database:drop --force
 	docker-compose exec php ./bin/console doctrine:database:create
