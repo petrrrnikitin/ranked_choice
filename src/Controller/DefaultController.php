@@ -20,7 +20,7 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/", name="homepage")
+     * @Route("/", name="main_homepage")
      */
     public function index(): Response
     {
@@ -33,20 +33,12 @@ class DefaultController extends AbstractController
     /**
      * @Route("/edit-product/{id}", methods="GET|POST", name="product_edit", requirements={"id"="\d+"})
      * @Route("/add-product", methods="GET|POST", name="product_add")
-     * @param Request  $request
-     * @param int|null $id
-     *
-     * @return Response
      */
     public function editProduct(Request $request, int $id = null): Response
     {
         $entityManager = $this->managerRegistry->getManager();
 
-        if ($id) {
-            $product = $entityManager->getRepository(Product::class)->find($id);
-        } else {
-            $product = new Product();
-        }
+        $product = $id ? $entityManager->getRepository(Product::class)->find($id) : new Product();
         $form = $this->createForm(EditProductFormType::class, $product);
 
         $form->handleRequest($request);
