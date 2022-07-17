@@ -28,8 +28,7 @@ class RegistrationFormType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(['message' => 'Please fill the field']),
-                    new Email(['message' => 'Please enter a valid email address.']
-                    ),
+                    new Email(['message' => 'Please enter a valid email address.']),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
